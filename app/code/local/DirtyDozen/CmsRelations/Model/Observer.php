@@ -63,4 +63,15 @@ class DirtyDozen_CmsRelations_Model_Observer
 
         return null;
     }
+
+    /**
+     * save relations 
+     * 
+     * @param Varien_Event_Observer $observer 
+     *
+     * @return void
+     */
+    public function saveRelations(Varien_Event_Observer $observer)
+    {
+    }
 }

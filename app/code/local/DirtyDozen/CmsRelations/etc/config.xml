@@ -74,6 +74,14 @@
                     </cmsrelations>
                 </observers>
             </adminhtml_cms_page_edit_tab_main_prepare_form>
+            <cms_page_prepare_save>
+                <observers>
+                    <save_cmsrelations>
+                        <class>cmsrelations/observer</class>
+                        <method>saveRelations</method>
+                    </save_cmsrelations>
+                </observers>
+            </cms_page_prepare_save>
         </events>
     </global>
     <adminhtml>

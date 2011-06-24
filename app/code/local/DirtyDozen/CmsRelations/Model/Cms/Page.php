@@ -42,22 +42,34 @@ class DirtyDozen_CmsRelations_Model_Cms_Page extends Mage_Cms_Model_Page
     public function getRelatedTranslations()
     {
         Mage::log('loading related pages');
-        $relationCollection = Mage::getModel('cmsrelations/cms_page_relation')
-            ->getCollection();
-        $relation = $relationCollection
-            ->addFieldToFilter('page_id', $this->getPageId())
-            ->getFirstItem();
-        $relatedPageIds = $relationCollection
-            ->addFieldToFilter('relation_set_id', $relation->getRelationSetId());
-        var_dump($relatedPageIds->toArray());exit;
+        $relationCollection = Mage::getModel('cmsrelations/cmsrelations_grouppage')
+            ->getCollection()->getSelect()
+            ->join(
+                array('group' => Mage::getResource('cmsrelations/cmsrelations_group')->getTableName()),
+                '`main_table`.group_id = group.group_id',
+                array('type')
+            )
+            ->where('type = ?', DirtyDozen_CmsRelations_Model_Cms_Page_Relation::TYPE_TRANSLATION);
+
+        die(var_dump('' . $relationCollection));
+
+        foreach ($relations as $relation) {
+            $group = Mage::getModel('cmsrelations/cmsrelations_group')
+                ->getCollection()
+                ->addFieldToFilter('group_id = ?', $relation->getGroupId())
+                ->addFieldToFilter('type = ?', DirtyDozen_CmsRelations_Model_Cms_Page_Relation::TYPE_TRANSLATION)
+                ->getFirstItem();
+            if ($group->getId()) {
+                return Mage::getModel('cmsrelations/cmsrelations_grouppage')
+                    ->getCollection()
+                    ->addFieldToFilter('group_id = ?', $group->getId());
+            }
+        }
     }
 
-    public function saveRelatedPages()
+    public function _afterSave()
     {
-    }
-
-    public function afterSave()
-    {
-        return parent::afterSave();
+        die(var_dump($this->getRelatedTranslations()));
+        die(var_dump('i am on line ' . __LINE__));
     }
 }

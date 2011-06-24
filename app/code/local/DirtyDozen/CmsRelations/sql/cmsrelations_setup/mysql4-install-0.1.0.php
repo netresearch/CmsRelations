@@ -18,11 +18,11 @@ CREATE TABLE IF NOT EXISTS {$this->getTable('cmsrelations_group')}
 
 CREATE TABLE IF NOT EXISTS {$this->getTable('cmsrelations_grouppage')}
 (
+  `grouppage_id` smallint unsigned not null auto_increment primary key,
   `group_id` smallint unsigned not null,
   `page_id` mediumint unsigned not null,
   `specification` varchar(31) null,
-  `updated_at` timestamp,
-  PRIMARY KEY (`page_id`, `group_id`)
+  `updated_at` timestamp
 ) ENGINE=InnoDB CHARSET=utf8;
 
 ");
