@@ -14,9 +14,12 @@
             <cmsrelations_mysql4>
                 <class>DirtyDozen_CmsRelations_Model_Mysql4</class>
                 <entities>
-                    <cms_page_relation>
-                        <table>cms_page_relation</table>
-                    </cms_page_relation>
+                    <group>
+                        <table>cmsrelations_group</table>
+                    </group>
+                    <grouppage>
+                        <table>cmsrelations_grouppage</table>
+                    </grouppage>
                 </entities>
             </cmsrelations_mysql4>
             <cms>
