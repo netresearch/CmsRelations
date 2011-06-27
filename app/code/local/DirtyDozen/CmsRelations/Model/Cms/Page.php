@@ -1,37 +1,4 @@
 <?php
-/**
- * Magento
- *
- * NOTICE OF LICENSE
- *
- * This source file is subject to the Open Software License (OSL 3.0)
- * that is bundled with this package in the file LICENSE.txt.
- * It is also available through the world-wide-web at this URL:
- * http://opensource.org/licenses/osl-3.0.php
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@magentocommerce.com so we can send you a copy immediately.
- *
- * DISCLAIMER
- *
- * Do not edit or add to this file if you wish to upgrade Magento to newer
- * versions in the future. If you wish to customize Magento for your
- * needs please refer to http://www.magentocommerce.com for more information.
- *
- * @category    Mage
- * @package     Mage_Cms
- * @copyright   Copyright (c) 2010 Magento Inc. (http://www.magentocommerce.com)
- * @license     http://opensource.org/licenses/osl-3.0.php  Open Software License (OSL 3.0)
- */
-
-
-/**
- * Cms Page Model
- *
- * @category    Mage
- * @package     Mage_Cms
- * @author      Magento Core Team <core@magentocommerce.com>
- */
 class DirtyDozen_CmsRelations_Model_Cms_Page extends Mage_Cms_Model_Page
 {
     /**
@@ -39,26 +6,43 @@ class DirtyDozen_CmsRelations_Model_Cms_Page extends Mage_Cms_Model_Page
      * 
      * @return Collection
      */
-    public function getRelatedTranslations()
+    public function getRelatedTranslationsDb()
     {
-        Mage::log('loading related pages');
-        $relationCollection = Mage::getModel('cmsrelations/grouppage')
-            ->getCollection()->getSelect()
-            ->join(
-                array('group' => Mage::getSingleton('core/resource')->getTableName('cmsrelations/group')),
-                '`main_table`.group_id = group.group_id',
-                array('type')
-            )
-			->where('type = ?', DirtyDozen_CmsRelations_Model_Cms_Page_Relation::TYPE_TRANSLATION)
-			->where('page_id = ?', $this->getId());
-		
-		// @todo: Return data
-		return array();
+        Mage::log('Loading related pages of page: ' . $this->getId());
+
+        $relationCollection = Mage::getModel('cmsrelations/relations')
+            ->getCollection()
+			->addFieldToFilter('type', DirtyDozen_CmsRelations_Model_Cms_Page_Relation::TYPE_TRANSLATION)
+			->addFieldToFilter('page_id', $this->getId());
+
+        return $relationCollection;
     }
 
+    /**
+     * Insert/update data in db
+     * 
+     * @return void
+     */
     public function _afterSave()
     {
-        die(var_dump($this->getRelatedTranslations()));
-        die(var_dump('i am on line ' . __LINE__));
+        $db = Mage::getSingleton('core/resource')->getConnection('core_write');
+
+        $tableName  = Mage::getSingleton('core/resource')->getTableName('cmsrelations/relations');
+        $condition = array($db->quoteInto('page_id = ?', $this->getId()));
+        $db->delete($tableName, $condition);
+
+        $db->commit();
+
+        $postRelations = $this->getRelatedTranslations();
+        foreach ($postRelations as $relation) {
+            $data = array(
+                'page_id'           => $this->getId(),
+                'related_page_id'   => $relation,
+                'type'              => DirtyDozen_CmsRelations_Model_Cms_Page_Relation::TYPE_TRANSLATION,
+            );
+
+            // @todo: Do it all with a single insert
+            $db->insert($tableName, $data);
+        }
     }
 }

@@ -5,6 +5,7 @@
 class DirtyDozen_CmsRelations_Model_Cms_Page_Relation extends Mage_Core_Model_Abstract
 {
     const TYPE_TRANSLATION=1;
+
     /**
      * Initialize resource model
      *
