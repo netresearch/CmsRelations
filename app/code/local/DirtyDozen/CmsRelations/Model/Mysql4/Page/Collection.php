@@ -5,12 +5,11 @@ class DirtyDozen_CmsRelations_Model_Mysql4_Page_Collection extends Mage_Cms_Mode
      * Returns pairs identifier - title for unique identifiers
      * and pairs identifier|page_id - title for non-unique after first
      * 
+     * @param integer $id
      * @return array
      */
-    public function toOptionIdArray()
+    public function toOptionIdArray($id)
     {
-        $id = Mage::app()->getFrontController()->getRequest()->getParam('page_id');
-
         $res = array();
         foreach ($this as $item) {
             $identifier = $item->getData('page_id');
