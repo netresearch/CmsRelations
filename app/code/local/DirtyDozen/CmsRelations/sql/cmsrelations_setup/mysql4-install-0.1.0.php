@@ -6,27 +6,15 @@ $this->startSetup();
 
 $this->run("
 
-CREATE TABLE IF NOT EXISTS {$this->getTable('cmsrelations_group')}
+CREATE TABLE IF NOT EXISTS {$this->getTable('cmsrelations_relations')}
 (
-  `group_id` smallint unsigned not null auto_increment primary key,
-  `name` varchar(63) not null,
-  `type` tinyint unsigned not null default 0,
-  `is_active` tinyint unsigned not null default 0,
-  `updated_at` timestamp
-) ENGINE=InnoDB CHARSET=utf8;
-
-
-CREATE TABLE IF NOT EXISTS {$this->getTable('cmsrelations_grouppage')}
-(
-  `group_id` smallint unsigned not null,
+  `id` smallint unsigned not null auto_increment primary key,
   `page_id` mediumint unsigned not null,
-  `specification` varchar(31) null,
-  `updated_at` timestamp,
-  PRIMARY KEY (`page_id`, `group_id`)
+  `related_page_id` mediumint unsigned not null,
+  `type` tinyint unsigned not null default 0
 ) ENGINE=InnoDB CHARSET=utf8;
 
 ");
 
 $this->endSetup();
-
 

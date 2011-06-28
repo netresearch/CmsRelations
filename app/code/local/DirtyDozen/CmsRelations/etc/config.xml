@@ -14,9 +14,9 @@
             <cmsrelations_mysql4>
                 <class>DirtyDozen_CmsRelations_Model_Mysql4</class>
                 <entities>
-                    <cms_page_relation>
-                        <table>cms_page_relation</table>
-                    </cms_page_relation>
+                    <relations>
+                        <table>cmsrelations_relations</table>
+                    </relations>
                 </entities>
             </cmsrelations_mysql4>
             <cms>
@@ -24,6 +24,11 @@
                     <page>DirtyDozen_CmsRelations_Model_Cms_Page</page>
                 </rewrite>
             </cms>
+            <cms_mysql4>
+                <rewrite>
+                    <page_collection>DirtyDozen_CmsRelations_Model_Mysql4_Page_Collection</page_collection>    
+                </rewrite>
+            </cms_mysql4>
         </models>
         <resources>
             <cmsrelations_setup>
@@ -74,6 +79,14 @@
                     </cmsrelations>
                 </observers>
             </adminhtml_cms_page_edit_tab_main_prepare_form>
+            <cms_page_prepare_save>
+                <observers>
+                    <save_cmsrelations>
+                        <class>cmsrelations/observer</class>
+                        <method>saveRelations</method>
+                    </save_cmsrelations>
+                </observers>
+            </cms_page_prepare_save>
         </events>
     </global>
     <adminhtml>
